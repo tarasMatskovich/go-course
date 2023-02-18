@@ -1,8 +1,8 @@
 package service
 
 import (
-	"library/pkg/repository"
 	"library/pkg/model"
+	"library/pkg/repository"
 )
 
 type Book interface {

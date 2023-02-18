@@ -3,9 +3,10 @@ package main
 import (
 	"library"
 	"library/pkg/handler"
-	"github.com/sirupsen/logrus"
 	"library/pkg/repository"
 	"library/pkg/service"
+
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
