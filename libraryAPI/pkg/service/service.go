@@ -16,6 +16,6 @@ type Service struct {
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		Book: NewBookService(repos.Book),
+		Book: NewBookService(repos.BookRepository),
 	}
 }

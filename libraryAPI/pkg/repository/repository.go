@@ -1,20 +1,11 @@
 package repository
 
-import (
-	"library/pkg/model"
-)
-
-type Book interface {
-	CreateBooks(users []model.Book) (int, error)
-	GetBooks() ([]model.Book, error)
-}
-
 type Repository struct {
-	Book
+	BookRepository
 }
 
 func NewRepository() *Repository {
 	return &Repository{
-		Book: NewBookRepository(),
+		BookRepository: NewBookRepository(),
 	}
 }
