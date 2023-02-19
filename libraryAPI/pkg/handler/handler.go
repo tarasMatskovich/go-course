@@ -16,7 +16,7 @@ func NewHandler(services *service.Service) *Handler {
 	}
 }
 
-func (h *Handler) InitRoutes() *gin.Engine {
+func (h *Handler) NewRouter() *gin.Engine {
 	router := gin.New()
 
 	router.POST("/books", h.CreateBooks)
