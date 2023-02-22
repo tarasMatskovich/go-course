@@ -3,9 +3,9 @@ package handler_test
 import (
 	"library/pkg/handler"
 	"library/pkg/mock"
+	"library/pkg/model"
 	"library/pkg/repository"
 	"library/pkg/service"
-	"library/pkg/model"
 	"net/http"
 	"net/http/httptest"
 	"testing"
