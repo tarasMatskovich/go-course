@@ -1,6 +1,7 @@
 package handler_test
 
 import (
+	"encoding/json"
 	"library/pkg/handler"
 	"library/pkg/mock"
 	"library/pkg/repository"
@@ -34,6 +35,8 @@ func TestCreateBooksHandler(t *testing.T) {
 		handler.CreateBooks(c)
 
 		assert.Equal(t, http.StatusCreated, rr.Result().StatusCode)
+		expected := `{"status":"success"}`
+		assert.Equal(t, expected, rr.Body.String())
 	})
 
 	t.Run("Error on creating list of books", func(t *testing.T) {
@@ -55,6 +58,8 @@ func TestCreateBooksHandler(t *testing.T) {
 		handler.CreateBooks(c)
 
 		assert.Equal(t, http.StatusInternalServerError, rr.Result().StatusCode)
+		expected := `{"message":"error on creating list of books"}`
+		assert.Equal(t, expected, rr.Body.String())
 	})
 
 	t.Run("Bad request on creating list of books", func(t *testing.T) {
@@ -75,6 +80,8 @@ func TestCreateBooksHandler(t *testing.T) {
 		handler.CreateBooks(c)
 
 		assert.Equal(t, http.StatusBadRequest, rr.Result().StatusCode)
+		expected := `{"message":"json: cannot unmarshal object into Go value of type []model.Book"}`
+		assert.Equal(t, expected, rr.Body.String())
 	})
 }
 
@@ -96,6 +103,9 @@ func TestGetBooksHandler(t *testing.T) {
 		handler.GetBooks(c)
 
 		assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
+		mockResult, err := json.Marshal(mock.Books)
+		assert.Nil(t, err)
+		assert.Equal(t, mockResult, rr.Body.Bytes())
 	})
 
 	t.Run("Error on get list of books", func(t *testing.T) {
@@ -115,5 +125,7 @@ func TestGetBooksHandler(t *testing.T) {
 		handler.GetBooks(c)
 
 		assert.Equal(t, http.StatusInternalServerError, rr.Result().StatusCode)
+		expected := `{"message":"error on get list of books"}`
+		assert.Equal(t, expected, rr.Body.String())
 	})
 }
