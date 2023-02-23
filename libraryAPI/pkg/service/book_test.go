@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"library/pkg/mock"
-	"library/pkg/model"
 	"library/pkg/service"
 	"testing"
 
@@ -31,7 +30,6 @@ func TestCreateBooks(t *testing.T) {
 
 		result, err := service.CreateBooks(mock.Books)
 
-		assert.NotNil(t, err)
 		assert.Equal(t, 0, result)
 		assert.ErrorIs(t, err, mock.ErrorOnCreate)
 	})
@@ -53,13 +51,12 @@ func TestGetBooks(t *testing.T) {
 	t.Run("Error on get list of books", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		m := mock.NewMockBookRepository(ctrl)
-		m.EXPECT().GetBooks().Return([]model.Book{}, mock.ErrorOnGet)
+		m.EXPECT().GetBooks().Return(nil, mock.ErrorOnGet)
 		service := service.NewBookService(m)
 
 		result, err := service.GetBooks()
 
-		assert.NotNil(t, err)
-		assert.Equal(t, []model.Book{}, result)
+		assert.Nil(t, result)
 		assert.ErrorIs(t, err, mock.ErrorOnGet)
 	})
 }

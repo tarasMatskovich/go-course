@@ -3,7 +3,6 @@ package handler_test
 import (
 	"library/pkg/handler"
 	"library/pkg/mock"
-	"library/pkg/model"
 	"library/pkg/repository"
 	"library/pkg/service"
 	"net/http"
@@ -103,7 +102,7 @@ func TestGetBooksHandler(t *testing.T) {
 		gin.SetMode(gin.TestMode)
 		ctrl := gomock.NewController(t)
 		m := mock.NewMockBookRepository(ctrl)
-		m.EXPECT().GetBooks().Return([]model.Book{}, mock.ErrorOnGet)
+		m.EXPECT().GetBooks().Return(nil, mock.ErrorOnGet)
 		handler := handler.NewHandler(service.NewService(&repository.Repository{
 			BookRepository: m,
 		}))
