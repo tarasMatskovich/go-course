@@ -5,7 +5,7 @@ import (
 )
 
 type BookRepository interface {
-	CreateBooks(users []model.Book) (int, error)
+	CreateBooks(books []model.Book) (int, error)
 	GetBooks() ([]model.Book, error)
 }
 

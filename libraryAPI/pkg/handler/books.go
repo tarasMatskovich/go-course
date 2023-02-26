@@ -8,7 +8,7 @@ import (
 )
 
 func (h *Handler) CreateBooks(c *gin.Context) {
-	var input []model.Book
+	var input model.BooksList
 
 	if err := c.BindJSON(&input); err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, err.Error())

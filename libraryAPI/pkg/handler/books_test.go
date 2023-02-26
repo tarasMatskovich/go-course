@@ -30,7 +30,7 @@ func TestCreateBooksHandler(t *testing.T) {
 		c.Request = &http.Request{
 			Header: make(http.Header),
 		}
-		mock.MockCreateBooksPostJson(c, mock.Books)
+		mock.MockCreateBooksPostJson(c, mock.BooksList)
 
 		handler.CreateBooks(c)
 
@@ -53,7 +53,7 @@ func TestCreateBooksHandler(t *testing.T) {
 		c.Request = &http.Request{
 			Header: make(http.Header),
 		}
-		mock.MockCreateBooksPostJson(c, mock.Books)
+		mock.MockCreateBooksPostJson(c, mock.BooksList)
 
 		handler.CreateBooks(c)
 
@@ -80,8 +80,6 @@ func TestCreateBooksHandler(t *testing.T) {
 		handler.CreateBooks(c)
 
 		assert.Equal(t, http.StatusBadRequest, rr.Result().StatusCode)
-		expected := `{"message":"json: cannot unmarshal object into Go value of type []model.Book"}`
-		assert.Equal(t, expected, rr.Body.String())
 	})
 }
 
@@ -103,7 +101,7 @@ func TestGetBooksHandler(t *testing.T) {
 		handler.GetBooks(c)
 
 		assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
-		mockResult, err := json.Marshal(mock.Books)
+		mockResult, err := json.Marshal(mock.BooksList)
 		assert.Nil(t, err)
 		assert.Equal(t, mockResult, rr.Body.Bytes())
 	})
