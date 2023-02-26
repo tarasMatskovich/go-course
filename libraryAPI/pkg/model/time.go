@@ -4,6 +4,8 @@ import (
 	"library/config"
 	"strings"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 type BookTime struct {
@@ -24,6 +26,7 @@ func (t BookTime) MarshalJSON() ([]byte, error) {
 func (t *BookTime) UnmarshalJSON(data []byte) error {
 	format := config.Configuration.TimeFormat
 	date := strings.Trim(string(data), "\"")
+	logrus.Info("Parsed date from Request: ", date)
 
 	parsedDate, err := time.Parse(format, date)
 
