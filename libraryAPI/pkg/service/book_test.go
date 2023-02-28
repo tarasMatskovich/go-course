@@ -40,9 +40,9 @@ func TestCreateBooks(t *testing.T) {
 
 func TestGetBooks(t *testing.T) {
 	t.Run("Successfully got list of books", func(t *testing.T) {
-		configPath := "./../../configs/config.env"
-		config, err := config.New(configPath)
-		assert.Nil(t, err)
+		config := config.Config{
+			TimeFormat: "02.01.2006",
+		}
 		format := config.TimeFormat
 		ctrl := gomock.NewController(t)
 		m := mock.NewMockBookRepository(ctrl)

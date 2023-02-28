@@ -30,9 +30,9 @@ func (b SortedBooks) Swap(i, j int) {
 
 func (b *Book) MarshalJSON() ([]byte, error) {
 	data := struct {
-		Name   string
-		Author string
-		Year   string
+		Name   string `json:"name"`
+		Author string `json:"author"`
+		Year   string `json:"year"`
 	}{
 		Name:   b.Name,
 		Author: b.Author,
