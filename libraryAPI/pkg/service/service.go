@@ -6,8 +6,8 @@ import (
 )
 
 type Book interface {
-	CreateBooks(users []model.Book) (int, error)
-	GetBooks() ([]model.Book, error)
+	CreateBooks(books model.BooksList) (int, error)
+	GetBooks() (model.BooksList, error)
 }
 
 type Service struct {

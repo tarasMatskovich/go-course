@@ -1,14 +1,18 @@
 package handler_test
 
 import (
+	"bytes"
 	"encoding/json"
+	"library/config"
 	"library/pkg/handler"
 	"library/pkg/mock"
 	"library/pkg/repository"
 	"library/pkg/service"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
@@ -16,6 +20,22 @@ import (
 )
 
 func TestCreateBooksHandler(t *testing.T) {
+	configPath := "./../../configs/config.env"
+	config.New(configPath)
+	
+	jsonResponseBody := []byte(`
+	{
+		"books": [
+			{
+				"name": "Book name",
+				"author": "Book Author",
+				"year": "1998"
+			}
+		],
+		"date": "28.02.2023"
+	}
+	`)
+	failedResponseBody := []byte(`{"data":"value"}`)
 	t.Run("Successfully created list of books", func(t *testing.T) {
 		gin.SetMode(gin.TestMode)
 
@@ -30,7 +50,7 @@ func TestCreateBooksHandler(t *testing.T) {
 		c.Request = &http.Request{
 			Header: make(http.Header),
 		}
-		mock.MockCreateBooksPostJson(c, mock.Books)
+		mock.MockCreateBooksPostJson(c, jsonResponseBody)
 
 		handler.CreateBooks(c)
 
@@ -53,7 +73,7 @@ func TestCreateBooksHandler(t *testing.T) {
 		c.Request = &http.Request{
 			Header: make(http.Header),
 		}
-		mock.MockCreateBooksPostJson(c, mock.Books)
+		mock.MockCreateBooksPostJson(c, jsonResponseBody)
 
 		handler.CreateBooks(c)
 
@@ -75,17 +95,39 @@ func TestCreateBooksHandler(t *testing.T) {
 		c.Request = &http.Request{
 			Header: make(http.Header),
 		}
-		mock.MockCreateBooksPostJson(c, gin.H{"data": "value"})
+		mock.MockCreateBooksPostJson(c, failedResponseBody)
 
 		handler.CreateBooks(c)
 
 		assert.Equal(t, http.StatusBadRequest, rr.Result().StatusCode)
-		expected := `{"message":"json: cannot unmarshal object into Go value of type []model.Book"}`
+		expected := `{"message":"Key: 'BooksList.Books' Error:Field validation for 'Books' failed on the 'required' tag"}`
 		assert.Equal(t, expected, rr.Body.String())
 	})
 }
 
 func TestGetBooksHandler(t *testing.T) {
+	configPath := "./../../configs/config.env"
+	config.New(configPath)
+
+	body := `
+	{
+		"books": [
+			{
+				"name": "Book name",
+				"author": "Book Author",
+				"year": "1998"
+			}
+		],
+		"date": "{now}"
+	}
+	`
+	now := time.Now().Format("02.01.2006")
+	body = strings.Replace(body, "{now}", now, -1)
+	responseBody := []byte(body)
+	jsonResponseBody := &bytes.Buffer{}
+	err := json.Compact(jsonResponseBody, responseBody)
+	assert.Nil(t, err)
+
 	t.Run("Successfully got list of books", func(t *testing.T) {
 		gin.SetMode(gin.TestMode)
 		ctrl := gomock.NewController(t)
@@ -103,9 +145,7 @@ func TestGetBooksHandler(t *testing.T) {
 		handler.GetBooks(c)
 
 		assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
-		mockResult, err := json.Marshal(mock.Books)
-		assert.Nil(t, err)
-		assert.Equal(t, mockResult, rr.Body.Bytes())
+		assert.Equal(t, jsonResponseBody.Bytes(), rr.Body.Bytes())
 	})
 
 	t.Run("Error on get list of books", func(t *testing.T) {

@@ -1,10 +1,32 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"github.com/caarlos0/env/v6"
+	"github.com/joho/godotenv"
+)
 
-func New() error {
-	viper.AddConfigPath("configs")
-	viper.SetConfigName("config")
+var (
+	Configuration Config
+)
 
-	return viper.ReadInConfig()
+type Config struct {
+	Port       string `env:"LISTEN_PORT"`
+	TimeFormat string `env:"TIME_FORMAT"`
+}
+
+func New(configPath string) (*Config, error) {
+	err := godotenv.Load(configPath)
+	if err != nil {
+		return nil, err
+	}
+
+	config := Config{}
+	err = env.Parse(&config)
+	if err != nil {
+		return nil, err
+	}
+
+	Configuration = config
+
+	return &config, nil
 }

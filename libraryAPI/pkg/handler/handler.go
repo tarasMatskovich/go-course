@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"library/pkg/middleware"
 	"library/pkg/service"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +19,7 @@ func NewHandler(services *service.Service) *Handler {
 
 func (h *Handler) NewRouter() *gin.Engine {
 	router := gin.New()
+	router.Use(middleware.JSONMiddleware())
 
 	router.POST("/books", h.CreateBooks)
 	router.GET("/books", h.GetBooks)
