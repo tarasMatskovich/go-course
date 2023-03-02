@@ -50,7 +50,6 @@ func (r *bookCSVRepository) CreateBooks(books []model.Book) (int, error) {
 func (r *bookCSVRepository) GetBooks() ([]model.Book, error) {
 	booksFile, err := os.OpenFile(r.file, os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
-		println(1, err.Error())
 		return nil, err
 	}
 
