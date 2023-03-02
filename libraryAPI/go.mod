@@ -11,6 +11,7 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.11.2 // indirect
+	github.com/gocarina/gocsv v0.0.0-20230226133904-70c27cb2918a // indirect
 	github.com/goccy/go-json v0.10.0 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

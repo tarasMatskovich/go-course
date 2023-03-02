@@ -16,7 +16,6 @@ func NewBookService(repo repository.BookRepository) *BookService {
 }
 
 func (s *BookService) CreateBooks(books model.BooksList) (int, error) {
-	sort.Sort(model.SortedBooks(books.Books))
 	return s.repo.CreateBooks(books.Books)
 }
 
@@ -25,6 +24,8 @@ func (s *BookService) GetBooks() (model.BooksList, error) {
 	if err != nil {
 		return model.BooksList{}, err
 	}
+
+	sort.Sort(model.SortedBooks(books))
 
 	date := &model.BookTime{
 		Date: time.Now(),

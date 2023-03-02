@@ -6,9 +6,9 @@ import (
 )
 
 type Book struct {
-	Name   string `json:"name" binding:"required"`
-	Author string `json:"author" binding:"required"`
-	Year   int    `json:"year" binding:"required"`
+	Name   string `json:"name" binding:"required" csv:"name"`
+	Author string `json:"author" binding:"required" csv:"author"`
+	Year   int    `json:"year" binding:"required" csv:"year"`
 }
 
 type BooksList struct {

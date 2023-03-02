@@ -16,7 +16,7 @@ func main() {
 	if err != nil {
 		logrus.Fatalf("Error on initializing config: %s", err.Error())
 	}
-	repos := repository.NewRepository()
+	repos := repository.NewRepository(*config)
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 	server := new(library.Server)

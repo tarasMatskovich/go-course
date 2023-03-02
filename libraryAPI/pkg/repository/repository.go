@@ -1,11 +1,13 @@
 package repository
 
+import "library/config"
+
 type Repository struct {
 	BookRepository
 }
 
-func NewRepository() *Repository {
+func NewRepository(c config.Config) *Repository {
 	return &Repository{
-		BookRepository: NewBookRepository(),
+		BookRepository: NewCSVBookRepository(c.RepoFilePath),
 	}
 }
