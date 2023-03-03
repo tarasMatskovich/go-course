@@ -3,43 +3,40 @@ package repository
 import (
 	"errors"
 	"library/pkg/model"
-	"os"
+	"library/pkg/storage"
 
 	"github.com/gocarina/gocsv"
 )
 
 type bookCSVRepository struct {
-	file string
+	storage *storage.Storage
 }
 
-func NewCSVBookRepository(file string) BookRepository {
+func NewCSVBookRepository(storage *storage.Storage) BookRepository {
 	return &bookCSVRepository{
-		file: file,
+		storage: storage,
 	}
 }
 
 func (r *bookCSVRepository) CreateBooks(books []model.Book) (int, error) {
-	booksFile, err := os.OpenFile(r.file, os.O_RDWR|os.O_CREATE, os.ModePerm)
-	if err != nil {
+	if err := r.storage.ClearPointer(); err != nil {
 		return 0, err
 	}
 
-	defer booksFile.Close()
-
 	booksFromFile := []model.Book{}
-	if err := gocsv.UnmarshalFile(booksFile, &booksFromFile); err != nil {
+	if err := gocsv.UnmarshalFile(r.storage.File, &booksFromFile); err != nil {
 		if !errors.Is(err, gocsv.ErrEmptyCSVFile) {
 			return 0, err
 		}
 	}
 
-	if _, err := booksFile.Seek(0, 0); err != nil {
+	if err := r.storage.ClearPointer(); err != nil {
 		return 0, err
 	}
 
 	books = append(books, booksFromFile...)
 
-	err = gocsv.MarshalFile(&books, booksFile)
+	err := gocsv.MarshalFile(&books, r.storage.File)
 	if err != nil {
 		return 0, err
 	}
@@ -48,18 +45,15 @@ func (r *bookCSVRepository) CreateBooks(books []model.Book) (int, error) {
 }
 
 func (r *bookCSVRepository) GetBooks() ([]model.Book, error) {
-	booksFile, err := os.OpenFile(r.file, os.O_RDWR|os.O_CREATE, os.ModePerm)
-	if err != nil {
+	if err := r.storage.ClearPointer(); err != nil {
 		return nil, err
 	}
 
-	defer booksFile.Close()
-
 	books := []model.Book{}
 
-	if err := gocsv.UnmarshalFile(booksFile, &books); err != nil {
+	if err := gocsv.UnmarshalFile(r.storage.File, &books); err != nil {
 		if errors.Is(err, gocsv.ErrEmptyCSVFile) {
-			return []model.Book{}, nil
+			return nil, nil
 		}
 
 		return nil, err
