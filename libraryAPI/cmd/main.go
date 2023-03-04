@@ -6,6 +6,7 @@ import (
 	"library/pkg/handler"
 	"library/pkg/repository"
 	"library/pkg/service"
+	"library/pkg/storage"
 
 	"github.com/sirupsen/logrus"
 )
@@ -16,7 +17,12 @@ func main() {
 	if err != nil {
 		logrus.Fatalf("Error on initializing config: %s", err.Error())
 	}
-	repos := repository.NewRepository()
+	storage, err := storage.NewStorage(config.RepoFilePath)
+	if err != nil {
+		logrus.Fatalf("Error on initializing storage: %s", err.Error())
+	}
+	defer storage.File.Close()
+	repos := repository.NewRepository(storage)
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 	server := new(library.Server)

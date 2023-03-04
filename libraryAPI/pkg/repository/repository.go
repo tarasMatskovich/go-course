@@ -1,11 +1,15 @@
 package repository
 
+import (
+	"library/pkg/storage"
+)
+
 type Repository struct {
 	BookRepository
 }
 
-func NewRepository() *Repository {
+func NewRepository(bookStorage *storage.Storage) *Repository {
 	return &Repository{
-		BookRepository: NewBookRepository(),
+		BookRepository: NewCSVBookRepository(bookStorage),
 	}
 }

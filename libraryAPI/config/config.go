@@ -12,6 +12,7 @@ var (
 type Config struct {
 	Port       string `env:"LISTEN_PORT"`
 	TimeFormat string `env:"TIME_FORMAT"`
+	RepoFilePath string `env:"REPO_FILE_PATH"`
 }
 
 func New(configPath string) (*Config, error) {
