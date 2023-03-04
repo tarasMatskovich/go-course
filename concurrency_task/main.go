@@ -29,21 +29,19 @@ func producer(stream mockstream.Stream, link chan<- *mockstream.Tweet, wg *sync.
 }
 
 func consumer(link <-chan *mockstream.Tweet, wg *sync.WaitGroup) {
-	i := 0
 	for t := range link {
-		i++
 		if t == nil {
 			break
 		}
 		wg.Add(1)
-		go func(tw *mockstream.Tweet, wg *sync.WaitGroup, i int) {
+		go func(tw *mockstream.Tweet, wg *sync.WaitGroup) {
 			defer wg.Done()
 			if tw.IsTalkingAboutGo() {
 				fmt.Println(tw.Username, "\ttweets about golang")
 			} else {
 				fmt.Println(tw.Username, "\tdoes not tweet about golang")
 			}
-		}(t, wg, i)
+		}(t, wg)
 	}
 	wg.Wait()
 }
