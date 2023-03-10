@@ -1,0 +1,101 @@
+openapi: 3.0.3
+info:
+  title: Swagger Library-API
+  description: |-
+    This is a simple API server for store and get list of books
+  version: 1.0.0
+servers:
+  - url: http://localhost:9000
+tags:
+  - name: book
+    description: Everything about your Books
+paths:
+  /books:
+    post:
+      tags:
+        - book
+      summary: Add new books
+      description: Add new books
+      operationId: addBooks
+      requestBody:
+        description: Add new books
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BooksList'
+      responses:
+        '201':
+          description: Successful adding of new books
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooksList'
+        '400':
+          description: Invalid books attributes supplied
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid request data
+        '500':
+          description: Internal error on saving books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not found CSV file in repository
+    get:
+      tags:
+        - book
+      summary: Get lis of books
+      description: Get list of all books
+      operationId: getBooks
+      responses:
+        '200':
+          description: Successful got all books list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooksList'
+        '500':
+          description: Internal error on fetching books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not found CSV file in repository
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "All Quiet on the Western Front"
+        author:
+          type: string
+          example: "Erich Maria Remarque"
+        year:
+          type: string
+          example: "1988"
+    BooksList:
+      type: object
+      properties:
+        books:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+        date:
+          type: string
+          format: date-time
+          example: "03.03.2023"
+          
